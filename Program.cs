@@ -1,9 +1,8 @@
-﻿//****************************************************************************************************************************
+//****************************************************************************************************************************
 //*Практическая работа №12                                                                                                   *
 //*Сделал Егоров Н.Н, группа 2-ИСП                                                                                           *
 //*Задание: Написать функцию, которая осуществляет шифрование строки при помощи шифра Цезаря (например, A - D, B - E и т.д). *
 //****************************************************************************************************************************
-//ДОДЕЛАТЬ!!!
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,29 +28,47 @@ namespace Практическая_работа__12
             {
                 try
                 {
-                    char[] alphabet = new char[26] { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
+                    char[] upperAlphabet = new char[26] { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
+                    char[] lowerAlphabet = new char[26] { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
                     Console.Write("Напишите английское предложение: ");
                     string input = Console.ReadLine();
-                    if (string.IsNullOrEmpty(input))
+                    if (string.IsNullOrWhiteSpace(input))
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("Вы ничего не написали. Попробуйте ещё раз.");
+                        Console.WriteLine("Вы ничего не написали или строка состоит только из пробелов. Попробуйте ещё раз.");
                         Console.ForegroundColor = ConsoleColor.White;
                         continue;
                     }
                     char[] inputArr = input.ToCharArray();
-                    for (int i = 0; i < alphabet.Length; i++)
+                    for (int i = 0; i < inputArr.Length; i++)
                     {
-                        for (int j = 0; j < inputArr.Length; j++)
+                        Console.Write(inputArr[i]);
+                    }
+                    Console.WriteLine();
+                    for (int i = 0; i < inputArr.Length; i++)
+                    {
+                        for (int j = 0; j < lowerAlphabet.Length; j++)
                         {
-                            if (alphabet[i] == inputArr[j])
+                            if (Char.IsWhiteSpace(inputArr[i]))
                             {
-                                Console.WriteLine($"Эти буквы равны! {alphabet[i]}, {inputArr[j]}");
-                                inputArr[j] = alphabet[i + 3];
-                                Console.WriteLine(inputArr[j]);
+                                Console.Write(" ");
+                                break;
+                            }
+                            if (upperAlphabet[j] == inputArr[i])
+                            {
+                                inputArr[i] = upperAlphabet[(j + 3) % upperAlphabet.Length];
+                                Console.Write(inputArr[i]);
+                                break;
+                            }
+                            if (lowerAlphabet[j] == inputArr[i])
+                            {
+                                inputArr[i] = lowerAlphabet[(j + 3) % lowerAlphabet.Length];
+                                Console.Write(inputArr[i]);
+                                break;
                             }
                         }
                     }
+                    Console.WriteLine();
                 }
                 catch (Exception ex)//обработка исключения Exception (все ошибки в целом)
                 {
