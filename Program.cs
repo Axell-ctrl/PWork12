@@ -14,19 +14,19 @@ namespace Практическая_работа__12
 {
     internal class Program
     {
-        static void HandleError(FormatException fex)//обработчик исключения FormatException (входная строка имела неправильный формат)
+        static void HandleError(FormatException fex)//функция с сообщением об исключении FormatException (входная строка имела неправильный формат)
         {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"Что-то пошло не так! Ошибка: {fex.Message} Попробуйте ещё раз.");//Вывод текста с помощью интерполяции: Что-то пошло не так! Ошибка: Входная строка имела неправильный формат. 
             Console.ForegroundColor = ConsoleColor.White;
         }
-        static void HandleError(OverflowException ofex)//обработчик исключения OverflowException (Значение было недопустимо малым или недопустимо большим для Int32)
+        static void HandleError(OverflowException ofex)//функция с сообщением об исключении OverflowException (Значение было недопустимо малым или недопустимо большим для Int32)
         {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"Что-то пошло не так! Ошибка: {ofex.Message} Попробуйте ещё раз.");//Вывод текста с помощью интерполяции: Что-то пошло не так! Ошибка: Значение было недопустимо малым или недопустимо большим для Int32.
             Console.ForegroundColor = ConsoleColor.White;
         }
-        static void HandleError(Exception ex)//обработка исключения Exception (все ошибки в целом)
+        static void HandleError(Exception ex)//функция с сообщением об исключении Exception (все ошибки в целом)
         {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"Что-то пошло не так! Ошибка: {ex.Message} Попробуйте ещё раз.");//Вывод текста с помощью интерполяции: Что-то пошло не так! Ошибка: Входная строка имела неправильный формат. 
@@ -34,46 +34,38 @@ namespace Практическая_работа__12
         }
         static void CaesarCipher(string input)
         {
-            char[] upperAlphabet = new char[26] { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
-            char[] lowerAlphabet = new char[26] { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
-            char[] inputArr = input.ToCharArray();
-            Console.Write("Изначальное предложение (слово): ");
+            int shift = 3;//сдвиг на 3 символа вправо
+            char[] inputArr = input.ToCharArray();//преобразование строки в массив символов
+
+            Console.WriteLine($"Изначальное предложение (слово): {input}");//вывод изначального предложения
+            Console.Write("Зашифрованное предложение (слово): ");//вывод строки с текстом: "Зашифрованное предложение (слово): "
+
             for (int i = 0; i < inputArr.Length; i++)
             {
-                Console.Write(inputArr[i]);
-            }
-            Console.WriteLine();
-            Console.Write("Зашифрованное предложение (слово): ");
-            for (int i = 0; i < inputArr.Length; i++)
-            {
-                char c = inputArr[i];
-                if (c >= 'A' && c <= 'Z' || c >= 'a' && c <= 'z' || c == ' ')
+                if (inputArr[i] >= 'A' && inputArr[i] <= 'Z')//проверка на то, что ASCII-коды не выходят за границу заглавных латинских букв
                 {
-                    for (int j = 0; j < lowerAlphabet.Length; j++)
-                    {
-                        if (Char.IsWhiteSpace(inputArr[i]))
-                        {
-                            Console.Write(" ");
-                            break;
-                        }
-                        if (upperAlphabet[j] == inputArr[i])
-                        {
-                            inputArr[i] = upperAlphabet[(j + 3) % upperAlphabet.Length];
-                            Console.Write(inputArr[i]);
-                            break;
-                        }
-                        if (lowerAlphabet[j] == inputArr[i])
-                        {
-                            inputArr[i] = lowerAlphabet[(j + 3) % lowerAlphabet.Length];
-                            Console.Write(inputArr[i]);
-                            break;
-                        }
-                    }
+                    //символ сдвигается на 3 следующим образом: 1) у текущего символа отнимают ASCII-код первого символа текущей таблицы (в данном случае большая a)
+                    //2)к этому коду символа прибавляется сдвиг 3 и используется оператор для остатка деления
+                    //(для того, чтобы, к примеру, на букве Z программа не вывела ошибку выхода за границы массива)
+                    //3)прибавляется код первого символа обратно, чтобы вывелся корректный символ вывода
+
+                    inputArr[i] = (char)((inputArr[i] - 'A' + shift) % 26 + 'A');
+                    Console.Write(inputArr[i]);
+
+                }
+                else if (inputArr[i] >= 'a' && inputArr[i] <= 'z')//проверка на то, что ASCII-коды не выходят за границу прописных латинских букв
+                {
+                    inputArr[i] = (char)((inputArr[i] - 'a' + shift) % 26 + 'a');
+                    Console.Write(inputArr[i]);
+                }
+                else if (inputArr[i] == ' ' || inputArr[i] == '.' || inputArr[i] == ',')//проверка на то, что ASCII-коды равны либо пробелу, либо точке, либо запятой
+                {
+                    Console.Write(inputArr[i]);//вывод символа
                 }
                 else
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.Write("Вы ввели буквы или другие символы! Попробуйте ещё раз.");
+                    Console.Write("\nВы ввели буквы другого алфавита или другие символы! Попробуйте ещё раз.");
                     Console.ForegroundColor = ConsoleColor.White;
                     break;
                 }
@@ -87,7 +79,7 @@ namespace Практическая_работа__12
             Console.Clear();
             Console.Title = "Практическая работа №12";
             Console.WriteLine("Здравствуйте!");
-            bool exitProgram = false;
+            bool exitProgram = false;//флаг для выхода из программы
             while (true)
             {
                 try
@@ -95,14 +87,14 @@ namespace Практическая_работа__12
 
                     Console.Write("Напишите английское предложение (слово): ");
                     string input = Console.ReadLine();
-                    if (string.IsNullOrWhiteSpace(input))
+                    if (string.IsNullOrWhiteSpace(input))//проверка на пустоту строки или состоит ли строка из одних пробелов
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("Вы ничего не написали или строка состоит только из пробелов. Попробуйте ещё раз.");
                         Console.ForegroundColor = ConsoleColor.White;
                         continue;
                     }
-                    CaesarCipher(input);
+                    CaesarCipher(input);//функция, которая вызывает шифровальщик Цезаря
                 }
                 catch (Exception ex)//обработка исключения Exception (все ошибки в целом)
                 {
@@ -131,17 +123,17 @@ namespace Практическая_работа__12
                             break;
                         }
                     }
-                    catch (FormatException fex)
+                    catch (FormatException fex)//обработка исключения FormatException
                     {
-                        HandleError(fex);
+                        HandleError(fex);//функция которая вызывает сообщение ошибки FormatException
                     }
-                    catch (OverflowException ofex)
+                    catch (OverflowException ofex)//обработка исключения OverflowException
                     {
-                        HandleError(ofex);
+                        HandleError(ofex);//функция которая вызывает сообщение ошибки OverflowException
                     }
                     catch (Exception ex)
                     {
-                        HandleError(ex);
+                        HandleError(ex);//функция которая вызывает сообщение ошибки Exception
                     }
                 }
                 if (exitProgram == true)//если выход из программы является истинным
@@ -151,4 +143,3 @@ namespace Практическая_работа__12
         }
     }
 }
-
