@@ -36,9 +36,8 @@ namespace Практическая_работа__12
         {
             int shift = 3;//сдвиг на 3 символа вправо
             char[] inputArr = input.ToCharArray();//преобразование строки в массив символов
-
-            Console.WriteLine($"Изначальное предложение (слово): {input}");//вывод изначального предложения
-            Console.Write("Зашифрованное предложение (слово): ");//вывод строки с текстом: "Зашифрованное предложение (слово): "
+            string encryptedResult = "";
+            bool isValid = true;
 
             for (int i = 0; i < inputArr.Length; i++)
             {
@@ -49,29 +48,35 @@ namespace Практическая_работа__12
                     //(для того, чтобы, к примеру, на букве Z программа не вывела ошибку выхода за границы массива)
                     //3)прибавляется код первого символа обратно, чтобы вывелся корректный символ вывода
 
-                    inputArr[i] = (char)((inputArr[i] - 'A' + shift) % 26 + 'A');
-                    Console.Write(inputArr[i]);
-
+                    char encryptedChar = (char)((inputArr[i] - 'A' + shift) % 26 + 'A');
+                    encryptedResult += encryptedChar;
                 }
                 else if (inputArr[i] >= 'a' && inputArr[i] <= 'z')//проверка на то, что ASCII-коды не выходят за границу прописных латинских букв
                 {
-                    inputArr[i] = (char)((inputArr[i] - 'a' + shift) % 26 + 'a');
-                    Console.Write(inputArr[i]);
+                    char encryptedChar = (char)((inputArr[i] - 'a' + shift) % 26 + 'a');
+                    encryptedResult += encryptedChar;
                 }
                 else if (inputArr[i] == ' ' || inputArr[i] == '.' || inputArr[i] == ',')//проверка на то, что ASCII-коды равны либо пробелу, либо точке, либо запятой
                 {
-                    Console.Write(inputArr[i]);//вывод символа
+                    encryptedResult += inputArr[i];
                 }
                 else
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.Write("\nВы ввели буквы другого алфавита или другие символы! Попробуйте ещё раз.");
+                    Console.WriteLine("Вы ввели буквы другого алфавита или другие символы! Попробуйте ещё раз.");
                     Console.ForegroundColor = ConsoleColor.White;
+                    isValid = false;
                     break;
                 }
             }
-            Console.WriteLine();
+
+            if (isValid)
+            {
+                Console.WriteLine($"Изначальное предложение (слово): {input}");//вывод изначального предложения
+                Console.Write($"Зашифрованное предложение (слово): {encryptedResult}\n");//вывод строки с текстом: "Зашифрованное предложение (слово): "
+            }
         }
+
         static void Main(string[] args)
         {
             Console.BackgroundColor = ConsoleColor.DarkBlue;
